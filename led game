@@ -5,3 +5,13 @@ const int buttonPins[] = {5, 6, 7};
 const int buzzerPin = 8;
 const int redLedPin = 9;
 const int greenLedPin = 10;
+
+void setup() {
+  // Initialize the LED, button, and buzzer pins
+  for (int i = 0; i < 3; i++) {
+    pinMode(ledPins[i], OUTPUT);
+    pinMode(buttonPins[i], INPUT_PULLUP);
+  }
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(redLedPin, OUTPUT);
+  pinMode(greenLedPin, OUTPUT);
