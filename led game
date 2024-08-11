@@ -15,4 +15,7 @@ int CurrState;
 
 unsigned long LastToggleTime;
 int ToggleInterval;
+int CurrLed;
+int MaxToggles = 10;
+int toggleCnt = 0;
 
