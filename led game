@@ -77,3 +77,29 @@ void sequence_over() {
   delay(2000); // השהיית משחק
   CurrState = WAIT_FOR_NEW_SEQUENCE;
 }
+void playInitialTune() {
+  // הגדרת צפצוף לפני לחיצת כפתור
+  tone(pinBuzzer, 800, 300);  
+  delay(350);  
+  tone(pinBuzzer, 900, 300);  
+  delay(350);  
+  noTone(pinBuzzer);  
+}
+
+void playCorrectTune() {
+  // הגדרת הפעלת צפצוף למשחק הצלחה
+  tone(pinBuzzer, 1000, 200);  
+  delay(250);  
+  tone(pinBuzzer, 1200, 200);  
+  delay(250);  
+  noTone(pinBuzzer);  
+}
+
+void playIncorrectTune() {
+  // הגדרת צפצוף למשחק נכשל
+  tone(pinBuzzer, 500, 200);  
+  delay(250);  
+  tone(pinBuzzer, 300, 200);  
+  delay(250);  
+  noTone(pinBuzzer); 
+}
