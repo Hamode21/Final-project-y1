@@ -72,3 +72,8 @@ void sequence_on() {
     CurrState = SEQUENCE_OVER;
   }
 }
+void sequence_over() {
+  turnOffAllLeds();
+  delay(2000); // Wait for 2 seconds before starting a new sequence
+  CurrState = WAIT_FOR_NEW_SEQUENCE;
+}
