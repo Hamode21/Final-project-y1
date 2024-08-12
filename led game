@@ -1,3 +1,4 @@
+//הגדרת הפינים ללידים רמקול וכפתורים
 #define pinLedGreen 4
 #define pinLedYellow 3
 #define pinLedRed 2
@@ -19,3 +20,11 @@ int CurrLed;
 int MaxToggles = 10;
 int toggleCnt = 0;
 
+// הגדרת תחילת משחק שזה לדים נדלקים רנדומלי ל 3 שניות
+void wait_to_start() {
+  delay(random(1000, 3000));
+  CurrState = SEQUENCE_IS_ON;
+  toggleCnt = 0;
+  LastToggleTime = millis();
+  ToggleInterval = random(500, 2001); // השהיה ראנדומלית בין שניה ל 3 שניות
+}
