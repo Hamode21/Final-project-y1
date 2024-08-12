@@ -46,25 +46,25 @@ void wait_to_start() {
 //הגדרת משחק רץ , בודק איזה לד מאיר ואיזה כפתור נלחץ ולפי זה מפעיל צפצוף אם הם תואמים או לא
 void sequence_on() {
   if (toggleCnt < MaxToggles) {
-    if (millis() - LastToggleTime > random(500, 2001)) { // Directly calculate the interval here
+    if (millis() - LastToggleTime > random(500, 2001)) 
       turnOffAllLeds();
-      CurrLed = random(1, 4); // Randomly choose an LED (1 = Green, 2 = Yellow, 3 = Red)
+      CurrLed = random(1, 4); 
       turnOnLed(CurrLed);
       LastToggleTime = millis();
       toggleCnt++;
 
-      delay(500);  // Wait for 0.5 seconds
+      delay(500);  
 
-      playInitialTune();  // Play a tune before any button is pressed
+      playInitialTune();  //הפעלת צפצוף לפני שנלחץ כפתור
 
-      // Check if the corresponding button is pressed
+      // בודק אם כפתור נכון נלחץ
       if (isButtonPressed(CurrLed)) {
-        // Correct button pressed
-        playCorrectTune();  // Play the correct tune
+        
+        playCorrectTune();  // מפעיל צלצול הצלחה
         Serial.println("Correct button pressed!");
       } else if (isAnyButtonPressed()) {
-        // Wrong button pressed
-        playIncorrectTune();  // Play the incorrect tune
+        
+        playIncorrectTune();  // צלצול נכשל
         Serial.println("Wrong button pressed.");
       }
     }
@@ -74,6 +74,6 @@ void sequence_on() {
 }
 void sequence_over() {
   turnOffAllLeds();
-  delay(2000); // Wait for 2 seconds before starting a new sequence
+  delay(2000); // השהיית משחק
   CurrState = WAIT_FOR_NEW_SEQUENCE;
 }
