@@ -155,4 +155,15 @@ void showResult() {
   }
 
   delay(2000); 
+ gameOver(); 
+}
+
+void gameOver() {
+  while (true) {
+    if (digitalRead(pinBtnGreen) == LOW || digitalRead(pinBtnYellow) == LOW || digitalRead(pinBtnRed) == LOW || digitalRead(pinBtnBlue) == LOW) {
+      score = 0; 
+      loop(); 
+    }
+  }
+}
 
