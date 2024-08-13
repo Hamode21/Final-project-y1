@@ -13,3 +13,19 @@
 #define pinBuzzer 5
 
 int score = 0; 
+void setup() {
+  pinMode(pinLedGreen, OUTPUT);
+  pinMode(pinLedYellow, OUTPUT);
+  pinMode(pinLedRed, OUTPUT);
+  pinMode(pinLedBlue, OUTPUT); 
+
+  pinMode(pinBtnGreen, INPUT_PULLUP);
+  pinMode(pinBtnYellow, INPUT_PULLUP);
+  pinMode(pinBtnRed, INPUT_PULLUP);
+  pinMode(pinBtnBlue, INPUT_PULLUP); 
+
+  pinMode(pinBuzzer, OUTPUT);
+  
+  randomSeed(analogRead(A0));
+  Serial.begin(9600); 
+}
