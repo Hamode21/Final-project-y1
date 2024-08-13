@@ -58,5 +58,33 @@ void loop() {
     digitalWrite(selectedLeds[i], LOW); 
   }
 
-  tone(pinBuzzer, NOTE_G4, 500);  // Play NOTE_G4 instead of 1000 Hz tone
+  tone(pinBuzzer, NOTE_G4, 500);  
   delay(500); 
+  game();
+}
+
+void game() {    //הגדרת המשחק כללית
+  score = 0; 
+  for (int i = 0; i < 3; i++) { 
+    digitalWrite(pinLedGreen, LOW);
+    digitalWrite(pinLedYellow, LOW);
+    digitalWrite(pinLedRed, LOW);
+    digitalWrite(pinLedBlue, LOW); 
+
+    int ledToLight = random(1, 5); 
+
+    switch (ledToLight) {
+      case 1:
+        digitalWrite(pinLedGreen, HIGH);
+        break;
+      case 2:
+        digitalWrite(pinLedYellow, HIGH);
+        break;
+      case 3:
+        digitalWrite(pinLedRed, HIGH);
+        break;
+      case 4:
+        digitalWrite(pinLedBlue, HIGH); 
+        break;
+    }
+
