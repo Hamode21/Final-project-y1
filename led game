@@ -29,3 +29,8 @@ void setup() {
   randomSeed(analogRead(A0));
   Serial.begin(9600); 
 }
+void loop() {
+  digitalWrite(pinLedGreen, LOW);
+  digitalWrite(pinLedYellow, LOW);
+  digitalWrite(pinLedRed, LOW);
+  digitalWrite(pinLedBlue, LOW); 
