@@ -136,4 +136,23 @@ void game() {    //הגדרת המשחק כללית
 
     delay(500); 
   }
+ showResult();
+}
+
+void showResult() {
+  digitalWrite(pinLedGreen, LOW);
+  digitalWrite(pinLedYellow, LOW);
+  digitalWrite(pinLedRed, LOW);
+  digitalWrite(pinLedBlue, LOW); 
+
+  if (score == 0) {
+    Serial.println("נכשל!");
+    digitalWrite(pinLedRed, HIGH); 
+  } else {
+    Serial.print("הצלחה! נקודות: ");
+    Serial.println(score);
+    digitalWrite(pinLedGreen, HIGH); 
+  }
+
+  delay(2000); 
 
