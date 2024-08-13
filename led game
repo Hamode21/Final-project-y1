@@ -1,4 +1,4 @@
-//הגדרת הפינים ללידים רמקול וכפתורים
+// הגדרת הפינים ללידים רמקול וכפתורים
 #define pinLedGreen 4
 #define pinLedYellow 3
 #define pinLedRed 2
@@ -7,7 +7,7 @@
 #define pinBtnYellow 5
 #define pinBtnRed 8
 
-#define pinBuzzer 12  // Define the buzzer pin
+#define pinBuzzer 12  // הגדרת פין לרמקול
 
 #define WAIT_FOR_NEW_SEQUENCE 31
 #define SEQUENCE_IS_ON        32
@@ -15,19 +15,27 @@
 int CurrState;
 
 unsigned long LastToggleTime;
-int ToggleInterval;
 int CurrLed;
-int MaxToggles = 10;
+int MaxToggles = 3;
 int toggleCnt = 0;
 
-// הגדרת תחילת משחק שזה לדים נדלקים רנדומלי ל 3 שניות
-void wait_to_start() {
-  delay(random(1000, 3000));
-  CurrState = SEQUENCE_IS_ON;
-  toggleCnt = 0;
-  LastToggleTime = millis();
-  ToggleInterval = random(500, 2001); // השהיה ראנדומלית בין שניה ל 3 שניות
+void setup() {
+  Serial.begin(9600);
+  randomSeed(analogRead(A1));
+
+  pinMode(pinLedGreen, OUTPUT);
+  pinMode(pinLedYellow, OUTPUT);
+  pinMode(pinLedRed, OUTPUT);
+
+  pinMode(pinBtnGreen, INPUT_PULLUP);
+  pinMode(pinBtnYellow, INPUT_PULLUP);
+  pinMode(pinBtnRed, INPUT_PULLUP);
+
+  pinMode(pinBuzzer, OUTPUT);  // הגדרת פין לרמקול
+
+  CurrState = WAIT_FOR_NEW_SEQUENCE;
 }
+
 void loop() {
   switch(CurrState) {
     case WAIT_FOR_NEW_SEQUENCE: wait_to_start(); break;
@@ -35,50 +43,80 @@ void loop() {
     case SEQUENCE_OVER        : sequence_over(); break;
   }
 }
-// הגדרת השהייה לתחילת משחק
+
+// הגדרת תחילת משחק, לדים נדלקים רנדומלי לזמן רנדומלי בין שניה ל-3 שניות
 void wait_to_start() {
-  // Wait for a random duration between 1 to 3 seconds before starting the sequence
   delay(random(1000, 3000));
   CurrState = SEQUENCE_IS_ON;
   toggleCnt = 0;
   LastToggleTime = millis();
 }
-//הגדרת משחק רץ , בודק איזה לד מאיר ואיזה כפתור נלחץ ולפי זה מפעיל צפצוף אם הם תואמים או לא
+
+// הגדרת משחק רץ, בודק איזה לד מאיר ואיזה כפתור נלחץ, ולפי זה מפעיל צפצוף אם הם תואמים או לא
 void sequence_on() {
   if (toggleCnt < MaxToggles) {
-    if (millis() - LastToggleTime > random(500, 2001)) 
+    if (millis() - LastToggleTime > random(500, 2001)) {
       turnOffAllLeds();
-      CurrLed = random(1, 4); 
+      CurrLed = toggleCnt + 1; // כל פעם מדליקים לד אחר בסדר: ירוק, צהוב, אדום
       turnOnLed(CurrLed);
       LastToggleTime = millis();
       toggleCnt++;
 
       delay(500);  
-
-      playInitialTune();  //הפעלת צפצוף לפני שנלחץ כפתור
-
-      // בודק אם כפתור נכון נלחץ
-      if (isButtonPressed(CurrLed)) {
-        
-        playCorrectTune();  // מפעיל צלצול הצלחה
-        Serial.println("Correct button pressed!");
-      } else if (isAnyButtonPressed()) {
-        
-        playIncorrectTune();  // צלצול נכשל
-        Serial.println("Wrong button pressed.");
-      }
     }
   } else {
-    CurrState = SEQUENCE_OVER;
+    playBeforeButtonTune(); // צליל חדש אחרי ששלושת הלדים נדלקו ולפני לחיצה על כפתור
+
+    if (isAnyButtonPressed()) {
+      if (isButtonPressed(CurrLed)) {
+        playCorrectTune();  // מפעיל צלצול הצלחה
+        Serial.println("Correct button pressed!");
+      } else {
+        playIncorrectTune();  // צלצול נכשל
+        turnOnLed(3); // הדלקת הלד האדום
+        Serial.println("Wrong button pressed.");
+        delay(2000); // השהיה קצרה כדי להראות את הלד האדום דולק
+        CurrState = SEQUENCE_OVER; // סיום הסבב
+      }
+    }
   }
 }
+
 void sequence_over() {
   turnOffAllLeds();
   delay(2000); // השהיית משחק
   CurrState = WAIT_FOR_NEW_SEQUENCE;
 }
+
+void turnOnLed(int led) {
+  switch(led) {
+    case 1: digitalWrite(pinLedGreen, HIGH); break;
+    case 2: digitalWrite(pinLedYellow, HIGH); break;
+    case 3: digitalWrite(pinLedRed, HIGH); break;
+  }
+}
+
+void turnOffAllLeds() {
+  digitalWrite(pinLedGreen, LOW);
+  digitalWrite(pinLedYellow, LOW);
+  digitalWrite(pinLedRed, LOW);
+}
+
+bool isButtonPressed(int led) {
+  switch(led) {
+    case 1: return digitalRead(pinBtnGreen) == LOW;  // בודק אם הכפתור הירוק נלחץ
+    case 2: return digitalRead(pinBtnYellow) == LOW; // בודק אם הכפתור הצהוב נלחץ
+    case 3: return digitalRead(pinBtnRed) == LOW;    // בודק אם הכפתור האדום נלחץ
+    default: return false;
+  }
+}
+
+bool isAnyButtonPressed() {
+  return (digitalRead(pinBtnGreen) == LOW || digitalRead(pinBtnYellow) == LOW || digitalRead(pinBtnRed) == LOW);
+}
+
+// הגדרת צפצוף לפני לחיצת כפתור
 void playInitialTune() {
-  // הגדרת צפצוף לפני לחיצת כפתור
   tone(pinBuzzer, 800, 300);  
   delay(350);  
   tone(pinBuzzer, 900, 300);  
@@ -86,8 +124,8 @@ void playInitialTune() {
   noTone(pinBuzzer);  
 }
 
+// הגדרת הפעלת צפצוף למשחק הצלחה
 void playCorrectTune() {
-  // הגדרת הפעלת צפצוף למשחק הצלחה
   tone(pinBuzzer, 1000, 200);  
   delay(250);  
   tone(pinBuzzer, 1200, 200);  
@@ -95,11 +133,20 @@ void playCorrectTune() {
   noTone(pinBuzzer);  
 }
 
+// הגדרת צפצוף למשחק נכשל
 void playIncorrectTune() {
-  // הגדרת צפצוף למשחק נכשל
   tone(pinBuzzer, 500, 200);  
   delay(250);  
   tone(pinBuzzer, 300, 200);  
   delay(250);  
   noTone(pinBuzzer); 
+}
+
+// הגדרת צליל חדש אחרי ששלושת הלדים נדלקו ולפני לחיצה על כפתור
+void playBeforeButtonTune() {
+  tone(pinBuzzer, 600, 300);  
+  delay(350);  
+  tone(pinBuzzer, 700, 300);  
+  delay(350);  
+  noTone(pinBuzzer);  
 }
