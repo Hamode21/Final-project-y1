@@ -120,3 +120,20 @@ void game() {    //הגדרת המשחק כללית
         break;
       }
     }
+ digitalWrite(ledToLight, LOW); 
+
+    if (!buttonPressed || (correctButtonPressed && millis() - startTime >= 1000) || !correctButtonPressed) {
+      tone(pinBuzzer, NOTE_C4, 500);  // Play NOTE_C4 for failure
+      digitalWrite(pinLedRed, HIGH); 
+      delay(500); 
+      digitalWrite(pinLedRed, LOW); 
+    } else if (correctButtonPressed && millis() - startTime < 1000) {
+      tone(pinBuzzer, NOTE_A4, 500);  // Play NOTE_A4 for success
+      digitalWrite(pinLedGreen, HIGH); 
+      delay(500); 
+      digitalWrite(pinLedGreen, LOW); 
+    }
+
+    delay(500); 
+  }
+
