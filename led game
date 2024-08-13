@@ -87,4 +87,36 @@ void game() {    //הגדרת המשחק כללית
         digitalWrite(pinLedBlue, HIGH); 
         break;
     }
+   unsigned long startTime = millis(); 
+    bool correctButtonPressed = false;
+    bool buttonPressed = false;
 
+    while (millis() - startTime < 1000) { 
+      if (digitalRead(pinBtnGreen) == LOW && ledToLight == 1) {
+        correctButtonPressed = true;
+        buttonPressed = true;
+        score++; 
+        break;
+      } else if (digitalRead(pinBtnYellow) == LOW && ledToLight == 2) {
+        correctButtonPressed = true;
+        buttonPressed = true;
+        score++; 
+        break;
+      } else if (digitalRead(pinBtnRed) == LOW && ledToLight == 3) {
+        correctButtonPressed = true;
+        buttonPressed = true;
+        score++; 
+        break;
+      } else if (digitalRead(pinBtnBlue) == LOW && ledToLight == 4) {
+        correctButtonPressed = true;
+        buttonPressed = true;
+        score++; 
+        break;
+      } else if ((digitalRead(pinBtnGreen) == LOW && ledToLight != 1) ||
+                 (digitalRead(pinBtnYellow) == LOW && ledToLight != 2) ||
+                 (digitalRead(pinBtnRed) == LOW && ledToLight != 3) ||
+                 (digitalRead(pinBtnBlue) == LOW && ledToLight != 4)) {
+        buttonPressed = true;
+        break;
+      }
+    }
