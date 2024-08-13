@@ -34,3 +34,29 @@ void loop() {
   digitalWrite(pinLedYellow, LOW);
   digitalWrite(pinLedRed, LOW);
   digitalWrite(pinLedBlue, LOW); 
+  int ledOrder[4] = {pinLedGreen, pinLedYellow, pinLedRed, pinLedBlue};
+  int selectedLeds[3]; 
+  
+  for (int i = 0; i < 4; i++) {
+    int j = random(0, 4); 
+    int temp = ledOrder[i];
+    ledOrder[i] = ledOrder[j];
+    ledOrder[j] = temp;
+  }
+
+  for (int i = 0; i < 3; i++) {
+    selectedLeds[i] = ledOrder[i];
+  }
+
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(selectedLeds[i], HIGH); 
+  }
+  
+  delay(1000); 
+
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(selectedLeds[i], LOW); 
+  }
+
+  tone(pinBuzzer, NOTE_G4, 500);  // Play NOTE_G4 instead of 1000 Hz tone
+  delay(500); 
